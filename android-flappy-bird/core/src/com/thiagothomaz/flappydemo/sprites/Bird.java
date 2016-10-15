@@ -13,6 +13,7 @@ public class Bird {
 
     private Vector3 position;
     private Vector3 velocity;
+    private static final int MOVEMENT = 100;
 
     private Texture bird;
 
@@ -29,7 +30,7 @@ public class Bird {
         }
 
         velocity.scl(dt);
-        position.add(0, velocity.y, 0);
+        position.add(MOVEMENT * dt, velocity.y, 0);
         if (position.y < 0) {
             position.y = 0;
         }
