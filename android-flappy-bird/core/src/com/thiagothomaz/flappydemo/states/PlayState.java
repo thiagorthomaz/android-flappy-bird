@@ -16,9 +16,6 @@ public class PlayState extends State {
     private static final int TUBE_SPACING = 125;
     private static final int TUBE_COUNT = 4;
 
-
-
-
     private Bird bird;
     private Texture bg;
 
@@ -58,6 +55,10 @@ public class PlayState extends State {
             if (cam.position.x - (cam.viewportWidth / 2) > tube.getPosTopTube().x + tube.getTopTube().getWidth()) {
                 //The new position will be the current position + all the way to the of our tubes
                 tube.reposition(tube.getPosBotTube().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
+            }
+
+            if (tube.collides(bird.getBounds())) {
+                gsm.set(new PlayState(gsm));
             }
 
         }
