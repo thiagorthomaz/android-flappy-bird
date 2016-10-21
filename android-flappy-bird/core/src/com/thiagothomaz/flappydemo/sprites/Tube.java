@@ -24,6 +24,8 @@ public class Tube {
 
 
     public Tube(float x) {
+
+        //@TODO Improve this part: See Part 11: dispose resources - 2:50
         this.topTube = new Texture("toptube.png");
         this.bottomTube = new Texture("bottomtube.png");
         rand = new Random();
@@ -63,6 +65,11 @@ public class Tube {
 
     public boolean collides(Rectangle player) {
         return player.overlaps(boundsTop) || player.overlaps(boundsBot);
+    }
+
+    public void dispose(){
+        topTube.dispose();
+        bottomTube.dispose();
     }
 
 }

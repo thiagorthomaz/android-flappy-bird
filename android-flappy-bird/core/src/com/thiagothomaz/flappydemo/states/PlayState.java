@@ -59,6 +59,7 @@ public class PlayState extends State {
 
             if (tube.collides(bird.getBounds())) {
                 gsm.set(new PlayState(gsm));
+                break;
             }
 
         }
@@ -85,6 +86,12 @@ public class PlayState extends State {
 
     @Override
     public void dispose() {
+        bg.dispose();
+        bird.dispose();
 
+        for (Tube tube : tubes) {
+            tube.dispose();
+            System.out.println("Play state disposed.");
+        }
     }
 }
