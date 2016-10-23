@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.thiagothomaz.flappydemo.FlapplyDemo;
+import com.thiagothomaz.flappydemo.scenes.Hud;
 import com.thiagothomaz.flappydemo.sprites.Bird;
 import com.thiagothomaz.flappydemo.sprites.Tube;
 
@@ -22,12 +23,15 @@ public class PlayState extends State {
     private Texture bg;
     private Texture ground;
     private Vector2 groundPos1, groundPos2;
+    private Hud hud;
 
     private Array<Tube> tubes;
 
 
-    public PlayState(GameStateManager gsm) {
+    public PlayState(GameStateManager gsm, Hud hud) {
         super(gsm);
+        this.hud = hud;
+        this.hud.resetScore();
         bird = new Bird(50, 300);
         cam.setToOrtho(false,FlapplyDemo.WIDTH/2, FlapplyDemo.HEIGHT/2);
         bg = new Texture("bg.png");
@@ -55,25 +59,33 @@ public class PlayState extends State {
         handleInput();
         bird.update(dt);
         updateGround();
-        cam.position.x = bird.getPosition().x + 80; //80 to offset the camera a little bit of the bird
+        cam.position.x = bird.getPosition().x + 100; //80 to offset the camera a little bit of the bird
+
 
         for (Tube tube : tubes) {
 
-            //Verify if the tube is off to the left of the screen then excute the reposition method
+            //Verify if the tube is off to the left of the screen then execute the reposition method
             if (cam.position.x - (cam.viewportWidth / 2) > tube.getPosTopTube().x + tube.getTopTube().getWidth()) {
                 //The new position will be the current position + all the way to the of our tubes
                 tube.reposition(tube.getPosBotTube().x + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
             }
 
             if (tube.collides(bird.getBounds())) {
-                gsm.set(new PlayState(gsm));
+
+                gsm.set(new PlayState(gsm, hud));
                 break;
             }
+
+            if (bird.getPosition().x > (tube.getPosTopTube().x)){
+                hud.addScore(1);
+            }
+
+
 
         }
 
         if (bird.getPosition().y <= ground.getHeight() + GROUND_Y_OFFSET) {
-            gsm.set(new PlayState(gsm));
+            gsm.set(new PlayState(gsm, hud));
         }
 
         cam.update();
@@ -86,6 +98,7 @@ public class PlayState extends State {
         sb.begin();
         sb.draw(bg, cam.position.x - (cam.viewportWidth/2), 0);
         sb.draw(bird.getBird(), bird.getPosition().x, bird.getPosition().y);
+
 
         for (Tube tube : tubes) {
             sb.draw(tube.getTopTube(), tube.getPosTopTube().x, tube.getPosTopTube().y);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.thiagothomaz.flappydemo.scenes.Hud;
 import com.thiagothomaz.flappydemo.states.GameStateManager;
 import com.thiagothomaz.flappydemo.states.MenuState;
 
@@ -23,6 +24,9 @@ public class FlapplyDemo extends ApplicationAdapter {
 
 	private Music music;
 
+
+	private Hud hud;
+
 	
 	@Override
 	public void create () {
@@ -33,9 +37,11 @@ public class FlapplyDemo extends ApplicationAdapter {
 		music.setVolume(0.1f);
 		music.play();
 
+        hud = new Hud(batch);
+
 		img = new Texture("badlogic.jpg");
         Gdx.gl.glClearColor(1, 0, 0, 1);
-        gsm.push(new MenuState(gsm));
+        gsm.push(new MenuState(gsm, hud));
 	}
 
 	@Override
@@ -43,6 +49,8 @@ public class FlapplyDemo extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         gsm.update(Gdx.graphics.getDeltaTime());
         gsm.render(batch);
+        this.batch.setProjectionMatrix(this.hud.getStage().getCamera().combined);
+        this.hud.getStage().draw();
 
 	}
 	
